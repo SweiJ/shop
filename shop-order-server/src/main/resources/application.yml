@@ -5,6 +5,10 @@ spring:
     nacos:
       discovery:
         server-addr: localhost:8848
+    sentinel:
+      transport:
+        port: 9999 #跟控制台交流的端⼝,随意指定⼀个未使⽤的端⼝即可
+        dashboard: localhost:8080 # 指定控制台服务的地址
   application:
     name: order-service
   datasource:
@@ -18,3 +22,6 @@ spring:
         hbm2ddl:
           auto: update
         dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+feign:
+  sentinel:
+    enabled: true

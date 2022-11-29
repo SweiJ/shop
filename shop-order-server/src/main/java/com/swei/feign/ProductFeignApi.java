@@ -1,6 +1,7 @@
 package com.swei.feign;
 
 import com.swei.domain.Product;
+import com.swei.feign.fallback.ProductFeignFallback;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @author: SweiPC
  * @data: 2022-11-28 21:23
  */
-@FeignClient(name = "product-service")
+@FeignClient(name = "product-service", fallback = ProductFeignFallback.class)
 public interface ProductFeignApi {
     @RequestMapping("/product/{pid}")
     Product findByPid(@PathVariable("pid") Long pid);
