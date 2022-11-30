@@ -1,0 +1,34 @@
+server:
+  port: 9000
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+    sentinel:
+      transport:
+        port: 9999
+  dashboard: localhost:8080
+    gateway:
+      discovery:
+        locator:
+          enabled: true  # 让gateway可以发现nacos中的微服务
+      routes: # 可以配置多个路由
+        - id: product_route  # 路由名称 唯一
+          uri: lb://product-service  # 将符合条件的请求转发到那个服务 lb表示对服务进行负载均衡
+          predicates:
+            - Path=/product-serv/**  # 拦截那些请求
+          # 如前端发送的请求为 http://localhost:9000/product-serv/product/1
+          # 网关获取到的是 /product-serv/product/1
+          # 通过截取第一层路径 得到 http://product-service/product/1
+          filters:
+            - StripPrefix=1  # 在转发请求之前将拦截的路径的第一层路径删除掉
+        - id: order_route
+          uri: lb://order-service
+          predicates:
+            - Path=/order-serv/**
+          filters:
+            - StripPrefix=1
+            - time=true
